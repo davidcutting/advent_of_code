@@ -32,7 +32,7 @@ build_args += [
 
 calorie_counting = executable(
     meson.project_name() + '_calorie_counting',
-    sources : 'src/calorie_counting.cpp',
+    sources : 'src/day1/calorie_counting.cpp',
     dependencies: deps,
     include_directories : include_dir,
     install : false,
