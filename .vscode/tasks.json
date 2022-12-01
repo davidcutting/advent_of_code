@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup Build",
+            "type": "shell",
+            "command": "meson setup build",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Run Build",
+            "type": "shell",
+            "command": "ninja",
+            "args": [
+                "-j4"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

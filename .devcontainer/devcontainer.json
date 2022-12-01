@@ -1,0 +1,12 @@
+{
+    "name": "cpp-dev",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"extensions": [
+		"ms-vscode.cpptools",
+		"llvm-vs-code-extensions.vscode-clangd",
+		"ms-azuretools.vscode-docker"
+	],
+	"remoteUser": "dev"
+}
