@@ -38,6 +38,27 @@ auto get_rps(const char& input) -> std::optional<RockPaperScissorChoice>
     }
 }
 
+auto get_winning_hand(const RockPaperScissorChoice& thrown) -> RockPaperScissorChoice
+{
+    switch (thrown)
+    {
+        case RockPaperScissorChoice::ROCK: return RockPaperScissorChoice::PAPER;
+        case RockPaperScissorChoice::PAPER: return RockPaperScissorChoice::SCISSORS;
+        case RockPaperScissorChoice::SCISSORS: return RockPaperScissorChoice::ROCK;
+    }
+}
+
+auto get_losing_hand(const RockPaperScissorChoice& thrown) -> RockPaperScissorChoice
+{
+    switch (thrown)
+    {
+        case RockPaperScissorChoice::ROCK: return RockPaperScissorChoice::SCISSORS;
+        case RockPaperScissorChoice::PAPER: return RockPaperScissorChoice::ROCK;
+        case RockPaperScissorChoice::SCISSORS: return RockPaperScissorChoice::PAPER;
+    }
+}
+
+#ifdef PART1
 auto get_should_rps(const char& input) -> std::optional<RockPaperScissorChoice>
 {
     switch (input)
@@ -48,18 +69,24 @@ auto get_should_rps(const char& input) -> std::optional<RockPaperScissorChoice>
         default: return std::nullopt;
     }
 }
+#else
+auto get_should_rps(const char& input) -> std::optional<GameResult>
+{
+    switch (input)
+    {
+        case 'X': return GameResult::LOSS;
+        case 'Y': return GameResult::TIE;
+        case 'Z': return GameResult::WIN;
+        default: return std::nullopt;
+    }
+}
+#endif
 
 auto get_result(const RockPaperScissorChoice& theirs, const RockPaperScissorChoice& mine) -> GameResult
 {
     if (theirs == mine) return GameResult::TIE;
-    else if (theirs == RockPaperScissorChoice::ROCK && mine == RockPaperScissorChoice::PAPER)
-        return GameResult::WIN;
-    else if (theirs == RockPaperScissorChoice::PAPER && mine == RockPaperScissorChoice::SCISSORS)
-        return GameResult::WIN;
-    else if (theirs == RockPaperScissorChoice::SCISSORS && mine == RockPaperScissorChoice::ROCK)
-        return GameResult::WIN;
+    else if (mine == get_winning_hand(theirs)) return GameResult::WIN;
     else return GameResult::LOSS;
-
 }
 
 auto get_choice_score(const RockPaperScissorChoice& choice) -> int
