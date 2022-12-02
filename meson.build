@@ -38,3 +38,12 @@ calorie_counting = executable(
     install : false,
     c_args : build_args
 )
+
+rock_paper_scissors = executable(
+    meson.project_name() + '_rock_paper_scissors',
+    sources : 'src/day2/rock_paper_scissors.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
