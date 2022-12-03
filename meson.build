@@ -11,6 +11,7 @@ project(
 project_description = 'dcut answers to the Advent of Code 2022 challenge.'
 
 build_args = [
+    '-g3'
 ]
 
 # --------------------------------------------------
@@ -42,6 +43,15 @@ calorie_counting = executable(
 rock_paper_scissors = executable(
     meson.project_name() + '_rock_paper_scissors',
     sources : 'src/day2/rock_paper_scissors.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
+
+rucksack_reorg = executable(
+    meson.project_name() + '_rucksack_reorg',
+    sources : 'src/day3/rucksack_reorg.cpp',
     dependencies: deps,
     include_directories : include_dir,
     install : false,
