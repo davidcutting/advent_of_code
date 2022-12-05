@@ -1,14 +1,7 @@
 #pragma once
 
 #include <bits/stdc++.h>
-#include <cassert>
-#include <cstdint>
-#include <iostream>
-#include <string_view>
-#include <sys/types.h>
 #include <util.h>
-#include <utility>
-#include <vector>
 
 using Sections = std::vector<uint8_t>;
 
@@ -18,7 +11,23 @@ struct Elf
     uint8_t max;
     Sections sections;
 
+    // something goofy happening here
     auto contains(const Elf& other) const noexcept -> bool
+    {
+        for (auto other_section : other.sections)
+        {
+            for (auto section : sections)
+            {
+                if (section == other_section)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    auto fully_contains(const Elf& other) const noexcept -> bool
     {
         if (min >= other.min && max <= other.max)
         {
@@ -131,12 +140,20 @@ int main(int argc, char* argv[])
     assert(!elf_pairs.empty());
 
     int overlapping_section_count = 0;
+#define PART1
+#ifdef PART1
+    for (auto[elf_one, elf_two] : elf_pairs)
+    {
+        if (elf_two.fully_contains(elf_one)) overlapping_section_count++;
+        else if (elf_one.fully_contains(elf_two)) overlapping_section_count++;
+        else continue;
+    }
+#else
     for (auto[elf_one, elf_two] : elf_pairs)
     {
         if (elf_two.contains(elf_one)) overlapping_section_count++;
-        else if (elf_one.contains(elf_two)) overlapping_section_count++;
-        else continue;
     }
+#endif
 
     std::cout << overlapping_section_count << std::endl;
 
