@@ -1,16 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <cassert>
-#include <cstdint>
-#include <cstdlib>
-#include <functional>
-#include <iostream>
-#include <string>
 #include <util.h>
-#include <utility>
-#include <vector>
 
 /**
     ASCII:  [a,z] = [97,122], [A,Z] = [65,90]

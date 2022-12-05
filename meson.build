@@ -57,3 +57,12 @@ rucksack_reorg = executable(
     install : false,
     c_args : build_args
 )
+
+camp_cleanup = executable(
+    meson.project_name() + '_camp_cleanup',
+    sources : 'src/day4/camp_cleanup.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
