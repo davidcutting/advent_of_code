@@ -1,28 +1,45 @@
 #pragma once
 
 #include <bits/stdc++.h>
+#include <cstdint>
+#include <numeric>
+#include <ostream>
 #include <util.h>
-
-using Sections = std::vector<uint8_t>;
 
 struct Elf
 {
-    uint8_t min;
-    uint8_t max;
-    Sections sections;
+    uint32_t min;
+    uint32_t max;
 
-    // something goofy happening here
-    auto contains(const Elf& other) const noexcept -> bool
+    auto get_contains(const Elf& other) const noexcept -> std::vector<uint32_t>
     {
-        for (auto other_section : other.sections)
+        std::vector<uint32_t> result;
+
+        // Find intersections
+        for (auto i = min; i < max; i++)
         {
-            for (auto section : sections)
+            if (i >= other.min && i <= other.max)
             {
-                if (section == other_section)
-                {
-                    return true;
-                }
+                result.emplace_back(i);
             }
+        }
+
+        return result;
+    }
+
+    auto any_contains(const Elf& other) const noexcept -> bool
+    {
+        if (fully_contains(other))
+        {
+            return true;
+        }
+        if (min >= other.min && min <= other.max)
+        {
+            return true;
+        }
+        if (max <= other.max && max >= other.min)
+        {
+            return true;
         }
         return false;
     }
@@ -30,6 +47,10 @@ struct Elf
     auto fully_contains(const Elf& other) const noexcept -> bool
     {
         if (min >= other.min && max <= other.max)
+        {
+            return true;
+        }
+        if (other.min >= min && other.max <= max)
         {
             return true;
         }
@@ -42,21 +63,10 @@ class ElfBuilder
 private:
     Elf elf;
 public:
-    ElfBuilder& set_bounds(const uint8_t& min, const uint8_t& max) noexcept
+    ElfBuilder& set_bounds(const uint32_t& min, const uint32_t& max) noexcept
     {
         elf.min = min;
         elf.max = max;
-        return *this;
-    }
-
-    ElfBuilder& generate_sections() noexcept
-    {
-        if (elf.max - elf.min > elf.sections.max_size())
-        {
-            std::cout << elf.min << "-" << elf.max << std::endl;
-        }
-        elf.sections.reserve(elf.max - elf.min + 1);
-        std::iota(elf.sections.begin(), elf.sections.end(), elf.min);
         return *this;
     }
 
@@ -69,7 +79,7 @@ public:
 class SectionParser
 {
 private:
-    std::string_view line;
+    std::string line;
     std::pair<Elf, Elf> parsed_elves;
 public:
     SectionParser& add_line(const std::string_view& line) noexcept
@@ -81,10 +91,10 @@ public:
     SectionParser& get_elves() noexcept
     {
         auto comma = line.find(',');
-        std::string_view half_one = line.substr(0, comma);
-        std::string_view half_two = line.substr(comma + 1, line.length());
+        std::string half_one = line.substr(0, comma);
+        std::string half_two = line.substr(comma + 1, line.length());
 
-        using SectionBounds = std::pair<uint8_t, uint8_t>;
+        using SectionBounds = std::pair<uint32_t, uint32_t>;
 
         auto[bound_one, bound_two] = std::invoke([half_one, half_two]() {
             auto delimiter_pos_one = half_one.find('-');
@@ -101,11 +111,9 @@ public:
         });
 
         parsed_elves.first = ElfBuilder().set_bounds(bound_one.first, bound_one.second)
-                                         .generate_sections()
                                          .finish();
 
         parsed_elves.second = ElfBuilder().set_bounds(bound_two.first, bound_two.second)
-                                          .generate_sections()
                                           .finish();
 
         return *this;
@@ -140,18 +148,22 @@ int main(int argc, char* argv[])
     assert(!elf_pairs.empty());
 
     int overlapping_section_count = 0;
-#define PART1
+//#define PART1
 #ifdef PART1
     for (auto[elf_one, elf_two] : elf_pairs)
     {
-        if (elf_two.fully_contains(elf_one)) overlapping_section_count++;
-        else if (elf_one.fully_contains(elf_two)) overlapping_section_count++;
-        else continue;
+        if (elf_one.fully_contains(elf_two))
+        {
+            overlapping_section_count++;
+        }
     }
 #else
     for (auto[elf_one, elf_two] : elf_pairs)
     {
-        if (elf_two.contains(elf_one)) overlapping_section_count++;
+        if (elf_one.any_contains(elf_two))
+        {
+            overlapping_section_count++;
+        }
     }
 #endif
 
