@@ -1,9 +1,6 @@
 #pragma once
 
 #include <bits/stdc++.h>
-#include <cstdint>
-#include <numeric>
-#include <ostream>
 #include <util.h>
 
 struct Elf

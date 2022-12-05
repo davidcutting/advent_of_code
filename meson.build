@@ -66,3 +66,12 @@ camp_cleanup = executable(
     install : false,
     c_args : build_args
 )
+
+supply_stacks = executable(
+    meson.project_name() + '_supply_stacks',
+    sources : 'src/day5/supply_stacks.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
