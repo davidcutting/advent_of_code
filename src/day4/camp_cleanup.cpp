@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <bits/stdc++.h>
 #include <cassert>
 #include <cstdint>
@@ -20,18 +19,6 @@ struct Elf
     Sections sections;
 
     auto contains(const Elf& other) const noexcept -> bool
-    {
-        for (auto section : other.sections)
-        {
-            if (std::find(sections.begin(), sections.end(), section) != sections.end())
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    auto fully_contains(const Elf& other) const noexcept -> bool
     {
         if (min >= other.min && max <= other.max)
         {
@@ -124,8 +111,8 @@ public:
 int main(int argc, char* argv[])
 {
     // Get text from input file and make it didn't fail.
-    const auto text = dc::get_text_in_file("inputs/4_test.txt");
-    //const auto text = dc::get_text_in_file("inputs/4_input.txt");
+    //const auto text = dc::get_text_in_file("inputs/4_test.txt");
+    const auto text = dc::get_text_in_file("inputs/4_input.txt");
     if (!text.has_value())
     {
         std::cerr << "Failed to get text in file." << std::endl;
@@ -140,6 +127,8 @@ int main(int argc, char* argv[])
                            .get_elves()
                            .finish());
     }
+
+    assert(!elf_pairs.empty());
 
     int overlapping_section_count = 0;
     for (auto[elf_one, elf_two] : elf_pairs)
