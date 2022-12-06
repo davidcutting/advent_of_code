@@ -169,22 +169,41 @@ public:
     {
         for (auto command : commands)
         {
+            assert(command.count != 0);
             // Move number of supplies from command
+#ifdef PART1
             for (int i = 0; i < command.count; ++i)
             {
                 Stack& from = stacks.at(command.from - 1);
                 Stack& to = stacks.at(command.to - 1);
                 char supply = from.back();
                 from.pop_back();
-
-                std::cout << "   supply " << supply << std::endl;
-                std::cout << "   from " << command.from << std::endl;
-                std::cout << "   to " << command.to << std::endl;
-
                 to.emplace_back(supply);
             }
+#else
+            std::vector<char> supplies;
+            Stack& from = stacks.at(command.from - 1);
+            Stack& to = stacks.at(command.to - 1);
+
+            // Get all supplies that need moving
+            for (int i = 0; i < command.count; ++i)
+            {
+                supplies.emplace_back(from.back());
+                from.pop_back();
+            }
+
+            // Grabbing them this way caused the stack to be reversed
+            std::reverse(supplies.begin(), supplies.end());
+
+            // Move all at once
+            for (auto supply : supplies)
+            {
+                to.emplace_back(supply);
+            }
+
+            // Maybe not what they meant, but it reproduces the logic lol
+#endif
         }
-        
     }
 
     auto get_answer() noexcept -> std::string
