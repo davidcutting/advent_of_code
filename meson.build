@@ -75,3 +75,12 @@ supply_stacks = executable(
     install : false,
     c_args : build_args
 )
+
+tuning_trouble = executable(
+    meson.project_name() + '_tuning_trouble',
+    sources : 'src/day6/tuning_trouble.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
