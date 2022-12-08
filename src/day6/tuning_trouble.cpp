@@ -79,7 +79,7 @@ auto marker_finder(const std::string& line, std::vector<char>& processed, uint32
     return start_marker;
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     // Get text from input file and make it didn't fail.
     //const auto text = dc::get_text_in_file("inputs/6_test.txt");

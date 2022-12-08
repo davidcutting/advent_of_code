@@ -84,3 +84,12 @@ tuning_trouble = executable(
     install : false,
     c_args : build_args
 )
+
+no_space = executable(
+    meson.project_name() + '_no_space',
+    sources : 'src/day7/no_space.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
