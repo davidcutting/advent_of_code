@@ -1,26 +1,15 @@
 #include <bits/stdc++.h>
-#include <cassert>
-#include <cstdint>
-#include <functional>
-#include <memory>
-#include <span>
-#include <stdexcept>
-#include <string>
 #include <util.h>
-#include <vector>
 
-struct FileObject
+struct File
 {
     std::string name;
-};
-
-struct File : public FileObject
-{
     uint32_t size;
 };
 
-struct Directory : public FileObject
+struct Directory
 {
+    std::string name;
     bool is_populated = false;
     std::vector<File> files;
     std::vector<Directory*> directories;
@@ -51,27 +40,59 @@ public:
         }
     }
 
+    template<typename FileObject>
     auto populate_file_objects(const std::vector<FileObject*>& objects) noexcept -> void
     {
         for (FileObject* object : objects)
         {
-            File* file = dynamic_cast<File*>(object);
-            Directory* directory = dynamic_cast<Directory*>(object);
-            if (file)
+            if constexpr(std::is_same<FileObject, File>::value)
             {
-                current_directory->files.emplace_back(file);
+                current_directory->files.emplace_back(*object);
             }
-            else if (directory)
+            if constexpr(std::is_same<FileObject, Directory>::value)
             {
-                current_directory->directories.emplace_back(directory);
-            }
-            else
-            {
-                // something bad happened
-                return;
+                current_directory->directories.emplace_back(object);
             }
         }
         current_directory->is_populated = true;
+    }
+
+    /** Recursively iterate through directories (DFS) */
+    auto for_each_file_recursively(const Directory* root, std::function<void(const File&)> file_callback) const noexcept -> void
+    {
+        if (root->is_populated)
+        {
+            return;
+        }
+        if (!root->files.empty())
+        {
+            for (File file : root->files)
+            {
+                file_callback(file);
+            }
+        }
+        if (!root->directories.empty())
+        {
+            for (Directory* dir : root->directories)
+            {
+                for_each_file_recursively(dir, file_callback);
+            }
+        }
+    }
+
+    auto for_each_file(const Directory* root, std::function<void(const File&)> file_callback) const noexcept -> void
+    {
+        if (root->is_populated)
+        {
+            return;
+        }
+        if (!root->files.empty())
+        {
+            for (File file : root->files)
+            {
+                file_callback(file);
+            }
+        }
     }
 };
 
@@ -127,11 +148,6 @@ public:
     }
 };
 
-auto traverse_directories(const std::vector<std::string>& commands) noexcept -> void
-{
-
-}
-
 int main()
 {
     // Get text from input file and make it didn't fail.
@@ -149,8 +165,21 @@ int main()
     uint32_t line_count = 0;
     for (auto line : text.value())
     {
-        if (parser.is_command(const std::string &line))
+        Command command;
+        if (parser.is_command(line))
+        {
+            command = parser.parse_command_line(line);
+        }
+        else
+        {
+
+        }
         line_count++;
     }
+
+    uint32_t total_size = 0;
+    
+
+    std::cout << total_size << std::endl;
 
 }

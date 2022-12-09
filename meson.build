@@ -4,6 +4,7 @@ project(
     version : '0.0.1',
     default_options : [
         'cpp_std=c++20',
+        'buildtype=debug',
         'warning_level=3'
     ]
 )
@@ -11,7 +12,6 @@ project(
 project_description = 'dcut answers to the Advent of Code 2022 challenge.'
 
 build_args = [
-    '-g3'
 ]
 
 # --------------------------------------------------
@@ -88,6 +88,15 @@ tuning_trouble = executable(
 no_space = executable(
     meson.project_name() + '_no_space',
     sources : 'src/day7/no_space.cpp',
+    dependencies: deps,
+    include_directories : include_dir,
+    install : false,
+    c_args : build_args
+)
+
+tree_house = executable(
+    meson.project_name() + '_tree_house',
+    sources : 'src/day8/tree_house.cpp',
     dependencies: deps,
     include_directories : include_dir,
     install : false,
